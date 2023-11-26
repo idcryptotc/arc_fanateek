@@ -11,48 +11,6 @@ HINSTANCE hInst;                                // текущий экземпл
 WCHAR szTitle[MAX_LOADSTRING];                  // Текст строки заголовка
 WCHAR szWindowClass[MAX_LOADSTRING];            // имя класса главного окна
 
-enum Consts : int
-{
-    GLOBAL_SCALE = 4,
-    BRICK_WIDTH = 15,
-    BRICK_HEIGHT = 7,
-    CELL_WIDTH = 16,
-    CELL_HEIGHT = 8,
-    LEVEL_X_OFFSET = 8,
-    LEVEL_Y_OFFSET = 6,
-    LEVEL_X_SIZE = 12,
-    LEVEL_Y_SIZE = 14,
-};
-
-char Level_01[Consts::LEVEL_Y_SIZE][Consts::LEVEL_X_SIZE] =
-{
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
-};
-
-enum class BrickType
-{
-    None,
-    Red,
-    Blue
-};
-
-HPEN hPenRed, hPenBlue;
-HBRUSH hBrushRed, hBrushBlue;
-COLORREF Red, Blue;
-
 // Отправить объявления функций, включенных в этот модуль кода:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -157,65 +115,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
     return TRUE;
 }
 
-// Функция инициализации
-void Init()
-{
-    Red = RGB(255, 85, 85);
-    Blue = RGB(85, 255, 255);
-    hPenRed = CreatePen(PS_SOLID, 0, Red);
-    hPenBlue = CreatePen(PS_SOLID, 0, Blue);
-    hBrushRed = CreateSolidBrush(Red);
-    hBrushBlue = CreateSolidBrush(Blue);
-}
-
-// Функция отрисовки кирпича
-void DrawBrick(const HDC& hdc, int x, int y, BrickType brickType)
-{
-    HPEN hPen;
-    HBRUSH hBrush;
-
-    switch (brickType)
-    {
-        case BrickType::None:
-            return;
-        case BrickType::Red:
-            hPen = hPenRed;
-            hBrush = hBrushRed;
-            break;
-        case BrickType::Blue:
-            hPen = hPenBlue;
-            hBrush = hBrushBlue;
-            break;
-        default:
-            return;
-    }
-
-    SelectObject(hdc, hPen);
-    SelectObject(hdc, hBrush);
-    RoundRect(hdc, x * Consts::GLOBAL_SCALE, y * Consts::GLOBAL_SCALE
-        , (x + Consts::BRICK_WIDTH) * Consts::GLOBAL_SCALE
-        , (y + Consts::BRICK_HEIGHT) * Consts::GLOBAL_SCALE
-        , 2 * Consts::GLOBAL_SCALE, 2 * Consts::GLOBAL_SCALE);
-}
-
-// Функция отрисовки уровня
-void DrawLevel(const HDC& hdc)
-{
-    for (int i = 0; i < Consts::LEVEL_Y_SIZE; ++i)
-    {
-        for (int j = 0; j < Consts::LEVEL_X_SIZE; ++j)
-        {
-            DrawBrick(hdc, Consts::LEVEL_X_OFFSET + j * Consts::CELL_WIDTH, Consts::LEVEL_Y_OFFSET + i * Consts::CELL_HEIGHT, (BrickType)Level_01[i][j]);
-        }
-    }
-}
-
-// Функция отрисовки экрана
-void DrawFrame(const HDC& hdc)
-{
-    DrawLevel(hdc);
-}
-
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -251,10 +150,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
         case WM_DESTROY:
-            DeleteObject(hPenRed);
-            DeleteObject(hBrushRed);
-            DeleteObject(hPenBlue);
-            DeleteObject(hBrushBlue);
+            DeleteObjects();
             PostQuitMessage(0);
             break;
         default:

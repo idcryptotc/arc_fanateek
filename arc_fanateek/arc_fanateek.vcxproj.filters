@@ -19,6 +19,9 @@
     <Filter Include="Levels">
       <UniqueIdentifier>{1358b425-9560-49b3-b880-d73fc8b5bc75}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{f7d58462-2645-4703-b64c-537f8af8c6d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -35,6 +38,9 @@
     </ClInclude>
     <ClInclude Include="Levels.h">
       <Filter>Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -56,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="Levels.cpp">
       <Filter>Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
