@@ -13,6 +13,7 @@ enum Consts : int
     LEVEL_Y_OFFSET = 6,
     LEVEL_X_SIZE = 12,
     LEVEL_Y_SIZE = 14,
+    CIRCLE_SIZE = 7
 };
 
 // Функция инициализации
